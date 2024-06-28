@@ -2,6 +2,8 @@ using e_commerce.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using e_commerce.data;
+using e_commerce.service;
 
 var builder = WebApplication.CreateBuilder(args);
 // UseSentry
@@ -18,14 +20,20 @@ builder.WebHost.UseSentry(options =>
 
 
 // Add services to the container.
+var configuration = builder.Configuration;
+var env = builder.Environment.EnvironmentName;
+configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddMySqlApplicationDbContext(configuration.GetConnectionString("MySql") ?? "")
+    .AddServices()
+    .AddControllers();
+
+// swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// 加入 JWT 服務
+// JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

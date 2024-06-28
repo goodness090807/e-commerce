@@ -5,7 +5,7 @@ using Moq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace e_commerce.Test.Service.Services
+namespace e_commerce.Test.Service.Utils
 {
     public class TokenServiceTests
     {
@@ -24,10 +24,7 @@ namespace e_commerce.Test.Service.Services
             _tokenService = new TokenService(_configurationMock.Object);
         }
 
-        /// <summary>
-        /// 需要回傳正確的 JWT Token
-        /// </summary>
-        [Fact]
+        [Fact(DisplayName = "產生JWT Token時，驗證是合法的Token")]
         public void GenerateJwtToken_ShouldReturnValidToken()
         {
             // Arrange
@@ -44,7 +41,7 @@ namespace e_commerce.Test.Service.Services
             Assert.Equal(userId, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         }
 
-        [Fact]
+        [Fact(DisplayName = "刷新Token時，需要回傳合法的Token")]
         public void RefreshToken_ShouldReturnValidToken()
         {
             // Arrange

@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using e_commerce.Common.Models;
 using System.Net;
+using System.Text.Json;
 
 namespace e_commerce.Middlewares
 {
@@ -7,13 +8,13 @@ namespace e_commerce.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
-        private readonly IHub _sentryHub;
+        private readonly IWebHostEnvironment _env;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger, IHub sentryHub)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger, IWebHostEnvironment env)
         {
             _next = next;
             _logger = logger;
-            _sentryHub = sentryHub;
+            _env = env;
         }
 
         public async Task Invoke(HttpContext context)
@@ -24,23 +25,45 @@ namespace e_commerce.Middlewares
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "處理請求發生錯誤");
                 await HandleExceptionAsync(context, ex);
             }
         }
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            _logger.LogError(exception, "An unhandled exception has occurred while executing the request.");
-
-            // 將異常發送到 Sentry
-            _sentryHub.CaptureException(exception);
-
             var code = HttpStatusCode.InternalServerError;
-            var result = JsonConvert.SerializeObject(new { error = "An error occurred while processing your request." });
+            var message = exception.Message;
+            var errorCode = 500000;
+
+            if (exception is ApiException apiException)
+            {
+                code = GetHttpStatusCode(apiException);
+                message = apiException.Message;
+                errorCode = apiException.Code;
+            }
+
+            var result = JsonSerializer.Serialize(new ApiException((int)code, message, errorCode));
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);
+        }
+
+        private HttpStatusCode GetHttpStatusCode(ApiException apiException)
+        {
+            return apiException switch
+            {
+                BadRequestException => HttpStatusCode.BadRequest,
+                UnauthorizedException => HttpStatusCode.Unauthorized,
+                ForbiddenException => HttpStatusCode.Forbidden,
+                NotFoundException => HttpStatusCode.NotFound,
+                ConflictException => HttpStatusCode.Conflict,
+                UnprocessableEntityException => HttpStatusCode.InternalServerError,
+                TooManyRequestsException => HttpStatusCode.InternalServerError,
+                InternalServerErrorException => HttpStatusCode.InternalServerError,
+                _ => HttpStatusCode.InternalServerError
+            };
         }
     }
 }

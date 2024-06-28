@@ -1,5 +1,5 @@
-﻿using e_commerce.Common.Utils;
-using Microsoft.AspNetCore.Http;
+﻿using e_commerce.Common.Models;
+using e_commerce.Common.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce.Controllers.Test
@@ -29,6 +29,12 @@ namespace e_commerce.Controllers.Test
         public IActionResult GetKey()
         {
             return Ok(KeyGenerator.GenerateRandomKey());
+        }
+
+        [HttpGet("error")]
+        public IActionResult Error()
+        {
+            throw new BadRequestException("測試錯誤訊息");
         }
     }
 }

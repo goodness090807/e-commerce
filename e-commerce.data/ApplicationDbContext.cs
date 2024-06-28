@@ -1,4 +1,5 @@
 ﻿using e_commerce.data.Models;
+using e_commerce.data.Models.RefreshToken;
 using e_commerce.data.Models.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,9 @@ namespace e_commerce.data
         public ApplicationDbContext(DbContextOptions optinos) : base(optinos)
         {
         }
+
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
