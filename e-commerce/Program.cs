@@ -2,8 +2,8 @@ using e_commerce.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using e_commerce.data;
-using e_commerce.service;
+using e_commerce.Data;
+using e_commerce.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 // UseSentry

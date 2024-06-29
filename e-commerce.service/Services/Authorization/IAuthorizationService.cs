@@ -1,6 +1,6 @@
-﻿using e_commerce.service.Services.Authorization.ViewModels;
+﻿using e_commerce.Service.Services.Authorization.ViewModels;
 
-namespace e_commerce.service.Services.Authorization
+namespace e_commerce.Service.Services.Authorization
 {
     public interface IAuthorizationService : IBaseService
     {

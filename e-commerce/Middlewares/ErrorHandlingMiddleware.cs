@@ -1,4 +1,6 @@
 ﻿using e_commerce.Common.Models;
+using Microsoft.EntityFrameworkCore.Storage;
+using Sentry.Protocol;
 using System.Net;
 using System.Text.Json;
 
@@ -30,24 +32,34 @@ namespace e_commerce.Middlewares
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError;
+            var statusCode = 500;
             var message = exception.Message;
-            var errorCode = 500000;
+            var code = 500000;
+            var detail = new object();
 
             if (exception is ApiException apiException)
             {
-                code = GetHttpStatusCode(apiException);
+                statusCode = apiException.StatusCode;
                 message = apiException.Message;
-                errorCode = apiException.Code;
+                code = apiException.Code;
+                detail = apiException.Detail;
             }
 
-            var result = JsonSerializer.Serialize(new ApiException((int)code, message, errorCode));
+            var response = new
+            {
+                statusCode,
+                message,
+                code,
+                detail,
+                innerException = _env.IsDevelopment() ? exception.InnerException?.ToString() : null
+            };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(result);
+            context.Response.StatusCode = statusCode;
+
+            await JsonSerializer.SerializeAsync(context.Response.Body, response);
         }
 
         private HttpStatusCode GetHttpStatusCode(ApiException apiException)

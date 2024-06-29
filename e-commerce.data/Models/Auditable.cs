@@ -1,4 +1,4 @@
-﻿namespace e_commerce.data.Models
+﻿namespace e_commerce.Data.Models
 {
     public class Auditable : IAuditable
     {

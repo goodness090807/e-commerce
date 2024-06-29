@@ -1,4 +1,4 @@
-﻿namespace e_commerce.service.Utils.TokenService
+﻿namespace e_commerce.Service.Utils.TokenService
 {
     public interface ITokenService : IBaseService
     {

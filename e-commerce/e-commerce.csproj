@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,7 @@
     <RootNamespace>e_commerce</RootNamespace>
     <UserSecretsId>6455ef4e-2861-4fbd-884d-0a7fad7bbe17</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileFile>../Dockerfile</DockerfileFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\e-commerce.data\e-commerce.Data.csproj" />
-    <ProjectReference Include="..\e-commerce.service\e-commerce.Service.csproj" />
+    <ProjectReference Include="..\e-commerce.Data\e-commerce.Data.csproj" />
+    <ProjectReference Include="..\e-commerce.Service\e-commerce.Service.csproj" />
   </ItemGroup>
 
 </Project>

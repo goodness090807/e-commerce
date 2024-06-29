@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace e_commerce.data
+namespace e_commerce.Data
 {
     public static class ServiceCollectionExtensions
     {

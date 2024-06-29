@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace e_commerce.data.Models.User
+namespace e_commerce.Data.Models.User
 {
     public class UserConfig : IEntityTypeConfiguration<UserModel>
     {

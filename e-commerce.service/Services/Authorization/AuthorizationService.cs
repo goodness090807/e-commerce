@@ -1,12 +1,12 @@
 ﻿using e_commerce.Common.Models;
 using e_commerce.Common.Utils;
-using e_commerce.data;
-using e_commerce.data.Models.User;
-using e_commerce.service.Services.Authorization.ViewModels;
-using e_commerce.service.Utils.TokenService;
+using e_commerce.Data;
+using e_commerce.Data.Models.User;
+using e_commerce.Service.Services.Authorization.ViewModels;
+using e_commerce.Service.Utils.TokenService;
 using Microsoft.EntityFrameworkCore;
 
-namespace e_commerce.service.Services.Authorization
+namespace e_commerce.Service.Services.Authorization
 {
     public class AuthorizationService : IAuthorizationService
     {

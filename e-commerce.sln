@@ -5,9 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-commerce", "e-commerce\e-commerce.csproj", "{E24C311A-37C2-4E23-9191-39D8897C291E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-commerce.Service", "e-commerce.service\e-commerce.Service.csproj", "{03F132F1-CC4C-4AC8-A22B-9A13D4F0FB83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-commerce.Service", "e-commerce.Service\e-commerce.Service.csproj", "{03F132F1-CC4C-4AC8-A22B-9A13D4F0FB83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-commerce.Data", "e-commerce.data\e-commerce.Data.csproj", "{2EBA7A4B-9FD4-4CD2-AA8E-5013262CA0F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-commerce.Data", "e-commerce.Data\e-commerce.Data.csproj", "{2EBA7A4B-9FD4-4CD2-AA8E-5013262CA0F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-commerce.Test", "e-commerce.Test\e-commerce.Test.csproj", "{8328B4E6-FC87-41D6-BB1C-2EE64C69C2BA}"
 EndProject

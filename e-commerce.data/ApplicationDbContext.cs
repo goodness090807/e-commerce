@@ -1,9 +1,9 @@
-﻿using e_commerce.data.Models;
-using e_commerce.data.Models.RefreshToken;
-using e_commerce.data.Models.User;
+﻿using e_commerce.Data.Models;
+using e_commerce.Data.Models.RefreshToken;
+using e_commerce.Data.Models.User;
 using Microsoft.EntityFrameworkCore;
 
-namespace e_commerce.data
+namespace e_commerce.Data
 {
     public  class ApplicationDbContext : DbContext
     {

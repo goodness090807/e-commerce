@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace e_commerce.service.Utils.TokenService
+namespace e_commerce.Service.Utils.TokenService
 {
     public class TokenService : ITokenService
     {

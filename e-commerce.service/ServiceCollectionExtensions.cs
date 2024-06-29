@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace e_commerce.service
+namespace e_commerce.Service
 {
     public static class ServiceCollectionExtensions
     {

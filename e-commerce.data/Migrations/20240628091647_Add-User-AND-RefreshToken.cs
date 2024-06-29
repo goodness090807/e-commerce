@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace e_commerce.data.Migrations
+namespace e_commerce.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddUserANDRefreshToken : Migration

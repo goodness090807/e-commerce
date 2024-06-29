@@ -1,5 +1,5 @@
 ﻿using e_commerce.Common.Utils;
-using e_commerce.service.Utils.TokenService;
+using e_commerce.Service.Utils.TokenService;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System.IdentityModel.Tokens.Jwt;

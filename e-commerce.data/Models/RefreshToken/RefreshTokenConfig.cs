@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace e_commerce.data.Models.RefreshToken
+namespace e_commerce.Data.Models.RefreshToken
 {
     public class RefreshTokenConfig : IEntityTypeConfiguration<RefreshTokenModel>
     {

@@ -10,7 +10,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["e-commerce/e-commerce.csproj", "e-commerce/"]
-RUN dotnet restore "./e-commerce/e-commerce.csproj"
+COPY ["e-commerce.Common/e-commerce.Common.csproj", "e-commerce.Common/"]
+COPY ["e-commerce.Data/e-commerce.Data.csproj", "e-commerce.Data/"]
+COPY ["e-commerce.Service/e-commerce.Service.csproj", "e-commerce.Service/"]
+RUN dotnet restore "e-commerce/e-commerce.csproj"
 COPY . .
 WORKDIR "/src/e-commerce"
 RUN dotnet build "./e-commerce.csproj" -c $BUILD_CONFIGURATION -o /app/build

@@ -1,5 +1,5 @@
 ﻿using e_commerce.Controllers.Authorization.Requests;
-using e_commerce.service.Services.Authorization;
+using e_commerce.Service.Services.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce.Controllers.Authorization

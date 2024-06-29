@@ -1,4 +1,4 @@
-﻿namespace e_commerce.service.Services.Authorization.ViewModels
+﻿namespace e_commerce.Service.Services.Authorization.ViewModels
 {
     public class AuthViewModel
     {

@@ -1,6 +1,6 @@
-﻿using e_commerce.data.Models.RefreshToken;
+﻿using e_commerce.Data.Models.RefreshToken;
 
-namespace e_commerce.data.Models.User
+namespace e_commerce.Data.Models.User
 {
     public class UserModel : Auditable
     {
