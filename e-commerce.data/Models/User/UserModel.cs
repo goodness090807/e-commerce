@@ -8,7 +8,8 @@ namespace e_commerce.Data.Models.User
         public string HashedPassword { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        public bool Valid { get; set; } = false;
 
-        public ICollection<RefreshTokenModel>? RefreshTokens { get; set; }
+        public RefreshTokenModel? RefreshToken { get; set; } = null;
     }
 }

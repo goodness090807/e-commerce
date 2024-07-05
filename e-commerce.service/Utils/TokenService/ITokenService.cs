@@ -1,12 +1,12 @@
-﻿namespace e_commerce.Service.Utils.TokenService
+﻿using System.Security.Claims;
+
+namespace e_commerce.Service.Utils.TokenService
 {
     public interface ITokenService : IBaseService
     {
-        string GenerateJwtToken(string userId);
+        string GenerateJwtToken(string userId, List<Claim>? claims = default, int tokenExpirationMinutes = 0);
         string GenerateRefreshToken();
-        // refreshToken
         string RefreshToken(string token);
-        // revokeToken
-        void RevokeToken(string token);
+        ClaimsPrincipal GetPrincipalFromToken(string token);
     }
 }

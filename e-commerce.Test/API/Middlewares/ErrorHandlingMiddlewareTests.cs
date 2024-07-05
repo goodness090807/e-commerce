@@ -12,7 +12,7 @@ namespace e_commerce.Test.API.Middlewares
     /// <summary>
     /// ErrorHandlingMiddleware測試
     /// </summary>
-    [Trait("Category", "Middleware")]
+    [Trait("Middleware", "錯誤處理")]
     public class ErrorHandlingMiddlewareTests
     {
         private readonly Mock<ILogger<ErrorHandlingMiddleware>> _loggerMock;

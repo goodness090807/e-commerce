@@ -16,10 +16,11 @@ namespace e_commerce.Data.Models.RefreshToken
 
             // 關聯 User
             builder.HasOne(x => x.User)
-                .WithMany(x => x.RefreshTokens)
-                .HasForeignKey(x => x.UserId)
+                .WithOne(x => x.RefreshToken)
+                .HasForeignKey<RefreshTokenModel>(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            builder.HasIndex(rt => rt.UserId).HasDatabaseName("IX_RefreshTokens_UserId");
         }
     }
 }

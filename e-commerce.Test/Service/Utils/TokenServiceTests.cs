@@ -1,27 +1,38 @@
-﻿using e_commerce.Common.Utils;
+﻿using e_commerce.Common.Models;
 using e_commerce.Service.Utils.TokenService;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using static e_commerce.Common.Models.AppSettings;
 
 namespace e_commerce.Test.Service.Utils
 {
+    [Trait("Token相關", "驗證Token產生正確性")]
     public class TokenServiceTests
     {
         private readonly TokenService _tokenService;
-        private readonly Mock<IConfiguration> _configurationMock;
-        private readonly string _secretKey = KeyGenerator.GenerateRandomKey();
+        private readonly AppSettings _appSettings;
 
         public TokenServiceTests()
         {
-            _configurationMock = new Mock<IConfiguration>();
-            _configurationMock.SetupGet(x => x["Jwt:SecretKey"]).Returns(_secretKey);
-            _configurationMock.SetupGet(x => x["Jwt:Issuer"]).Returns("testIssuer");
-            _configurationMock.SetupGet(x => x["Jwt:Audience"]).Returns("testAudience");
+            _appSettings = new AppSettings
+            {
+                Jwt = new JwtSettings
+                {
+                    SecretKey = "YourTestSecretKeyHereMustBeLongEnough",
+                    Issuer = "TestIssuer",
+                    Audience = "TestAudience",
+                    TokenExpirationMinutes = 60
+                }
+            };
+            var options = Options.Create(_appSettings);
 
+            // Mock一個Ilogger
+            var logger = new Mock<ILogger<TokenService>>().Object;
 
-            _tokenService = new TokenService(_configurationMock.Object);
+            _tokenService = new TokenService(options, logger);
         }
 
         [Fact(DisplayName = "產生JWT Token時，驗證是合法的Token")]
@@ -37,7 +48,7 @@ namespace e_commerce.Test.Service.Utils
             Assert.NotNull(token);
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
-            Assert.Equal("testIssuer", jwtToken.Issuer);
+            Assert.Equal("TestIssuer", jwtToken.Issuer);
             Assert.Equal(userId, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         }
 
@@ -57,7 +68,7 @@ namespace e_commerce.Test.Service.Utils
             Assert.NotNull(refreshedToken);
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
-            Assert.Equal("testIssuer", jwtToken.Issuer);
+            Assert.Equal("TestIssuer", jwtToken.Issuer);
             Assert.Equal(token, jwtToken.RawData);
         }
     }

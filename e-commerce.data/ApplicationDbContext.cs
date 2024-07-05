@@ -1,4 +1,5 @@
-﻿using e_commerce.Data.Models;
+﻿using e_commerce.Common.Utils;
+using e_commerce.Data.Models;
 using e_commerce.Data.Models.RefreshToken;
 using e_commerce.Data.Models.User;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,10 @@ namespace e_commerce.Data
             {
                 if (entityEntry.State == EntityState.Added)
                 {
-                    entityEntry.Entity.CreatedAt = DateTime.UtcNow;
+                    entityEntry.Entity.CreatedAt = DateTimeHelper.GetUTC8Now();
                 }
 
-                entityEntry.Entity.UpdatedAt = DateTime.UtcNow;
+                entityEntry.Entity.UpdatedAt = DateTimeHelper.GetUTC8Now();
             }
 
             return base.SaveChanges(acceptAllChangesOnSuccess);
@@ -50,10 +51,10 @@ namespace e_commerce.Data
             {
                 if (entityEntry.State == EntityState.Added)
                 {
-                    entityEntry.Entity.CreatedAt = DateTime.UtcNow;
+                    entityEntry.Entity.CreatedAt = DateTimeHelper.GetUTC8Now();
                 }
 
-                entityEntry.Entity.UpdatedAt = DateTime.UtcNow;
+                entityEntry.Entity.UpdatedAt = DateTimeHelper.GetUTC8Now();
             }
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);

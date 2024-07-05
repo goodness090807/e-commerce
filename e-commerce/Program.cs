@@ -1,22 +1,20 @@
 using e_commerce.Middlewares;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using e_commerce.Data;
 using e_commerce.Service;
+using e_commerce.Extensions;
+using Serilog;
+using e_commerce.Common.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // UseSentry
-builder.WebHost.UseSentry(options =>
+builder.Host.UseSerilog((_, c) =>
 {
-    options.TracesSampleRate = 1.0; // <- Set this to configure automatic tracing
-    options.SetBeforeSend((@event, hint) =>
-    {
-        // Never report server names
-        @event.ServerName = null;
-        return @event;
-    });
+    c.Enrich.FromLogContext()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.Sentry();
 });
+builder.WebHost.UseSentry();
 
 
 // Add services to the container.
@@ -24,31 +22,18 @@ var configuration = builder.Configuration;
 var env = builder.Environment.EnvironmentName;
 configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true);
+builder.Services.Configure<AppSettings>(configuration);
 
 builder.Services.AddMySqlApplicationDbContext(configuration.GetConnectionString("MySql") ?? "")
     .AddServices()
+    .AddBasicCors()
+    .AddJwtAuthentication(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], configuration["Jwt:SecretKey"])
+    .AddStackExchangeRedis(configuration["Redis:Host"], configuration["Redis:InstanceName"])
     .AddControllers();
 
 // swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!))
-        };
-    });
-
+builder.Services.AddSwagger();
 
 var app = builder.Build();
 
@@ -60,10 +45,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<TokenValidationMiddleware>();
+
+// 需要在 UseAuthorization 之前
+app.UseCors();
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

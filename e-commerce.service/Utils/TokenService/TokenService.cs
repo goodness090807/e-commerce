@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using e_commerce.Common.Models;
+using e_commerce.Service.Utils.TokenService.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,32 +12,35 @@ namespace e_commerce.Service.Utils.TokenService
 {
     public class TokenService : ITokenService
     {
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly string _audience;
+        private readonly AppSettings _appSettings;
+        private readonly ILogger<TokenService> _logger;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IOptions<AppSettings> options, ILogger<TokenService> logger)
         {
-            _secretKey = configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException(nameof(configuration), "Jwt:SecretKey");
-            _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException(nameof(configuration), "Jwt:Issuer");
-            _audience = configuration["Jwt:Audience"] ?? throw new ArgumentNullException(nameof(configuration), "Jwt:Audience");
+            _appSettings = options.Value;
+            _logger = logger;
         }
 
 
-        public string GenerateJwtToken(string userId)
+        public string GenerateJwtToken(string userId, List<Claim>? claims = default, int tokenExpirationMinutes = 0)
         {
-            var claims = new List<Claim>
+            var mergedClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userId),
+                new (ClaimTypes.NameIdentifier, userId),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+            if (claims != null)
+            {
+                mergedClaims.AddRange(claims);
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Jwt.SecretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                issuer: _issuer,
-                audience: _audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                issuer: _appSettings.Jwt.Issuer,
+                audience: _appSettings.Jwt.Audience,
+                claims: mergedClaims,
+                expires: DateTimeOffset.UtcNow.DateTime.AddMinutes(tokenExpirationMinutes > 0 ? tokenExpirationMinutes : _appSettings.Jwt.TokenExpirationMinutes),
                 signingCredentials: credentials
             );
 
@@ -55,15 +61,15 @@ namespace e_commerce.Service.Utils.TokenService
         public string RefreshToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_secretKey);
+            var key = Encoding.UTF8.GetBytes(_appSettings.Jwt.SecretKey);
             var validationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = true,
-                ValidIssuer = _issuer,
                 ValidateAudience = true,
-                ValidAudience = _audience,
+                ValidIssuer = _appSettings.Jwt.Issuer,
+                ValidAudience = _appSettings.Jwt.Audience,
                 ValidateLifetime = false // Disable token expiration check for refresh token
             };
 
@@ -73,7 +79,7 @@ namespace e_commerce.Service.Utils.TokenService
 
             if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new UnauthorizedException("Invalid token");
             }
 
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
@@ -81,27 +87,35 @@ namespace e_commerce.Service.Utils.TokenService
             return GenerateJwtToken(userId);
         }
 
-        public void RevokeToken(string token)
+        public ClaimsPrincipal GetPrincipalFromToken(string token)
         {
-            //// Implement token revocation logic here
-            //// For example, you can add the revoked token to a blacklist or invalidate it in the database
-            //// This implementation depends on your specific requirements
-            //// Placeholder code to demonstrate the concept
-            //// Replace it with your actual implementation
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Jwt.SecretKey);
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = _appSettings.Jwt.Issuer,
+                    ValidAudience = _appSettings.Jwt.Audience,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
 
-            //// Add the revoked token to a blacklist or invalidate it in the database
-            //// For example, you can store the revoked token in a Redis cache or a database table
-            //// Here, we are assuming a Redis cache implementation
-
-            //// Connect to the Redis cache
-            //var redis = ConnectionMultiplexer.Connect("localhost");
-
-            //// Get the database instance
-            //var db = redis.GetDatabase();
-
-            //// Add the revoked token to the blacklist with an expiration time
-            //// Set the expiration time based on your requirements
-            //db.StringSet(token, "revoked", TimeSpan.FromDays(1));
+                return principal;
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                throw new UnauthorizedException("Token expired", code: ErrorCodes.TokenExpired);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogWarning(ex, "奇怪的Token進入");
+                throw new UnauthorizedException("Invalid token");
+            }
         }
     }
 }

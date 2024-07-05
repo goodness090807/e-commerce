@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using e_commerce.Service.Utils.TokenBlacklist;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace e_commerce.Service
@@ -8,6 +9,7 @@ namespace e_commerce.Service
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddAllCustomService();
+            services.AddSingleton<ITokenBlacklistService, TokenBlacklistService>();
 
             return services;
         }
@@ -22,23 +24,20 @@ namespace e_commerce.Service
         public static IServiceCollection AddAllCustomService(this IServiceCollection services)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var ibaseServices = assembly.GetTypes()
+            var baseServices = assembly.GetTypes()
                 .Where(type => typeof(IBaseService).IsAssignableFrom(type))
-                .Where(type => type != typeof(IBaseService));
+                .Where(type => type != typeof(IBaseService))
+                .Where(type => type.IsInterface);
 
-            foreach (Type iservice in ibaseServices)
+            foreach (Type baseService in baseServices)
             {
-                if (!iservice.IsInterface)
-                    continue;
-
-                var implementInstance = ibaseServices.FirstOrDefault(type => iservice.IsAssignableFrom(type) && !type.IsInterface);
-
-                if (implementInstance == null)
+                var implementType = Array.Find(assembly.GetTypes(), type => baseService.IsAssignableFrom(type) && !type.IsInterface);
+                if (implementType == null)
                 {
-                    throw new NotImplementedException($"找不到{iservice.Name}的實作");
+                    throw new NotImplementedException($"找不到{baseService.Name}的實作");
                 }
 
-                services.AddScoped(iservice, implementInstance);
+                services.AddScoped(baseService, implementType);
             }
 
             return services;

@@ -2,17 +2,20 @@
 {
     public class AuthViewModel
     {
-        public AuthViewModel(int id, string username, string token, string refreshToken)
+        public AuthViewModel(string token, string refreshToken)
         {
-            Id = id;
-            Username = username;
             Token = token;
             RefreshToken = refreshToken;
         }
 
-        public int Id { get; }
-        public string Username { get; }
+        /// <summary>
+        /// 存取用 Token
+        /// </summary>
         public string Token { get; }
+
+        /// <summary>
+        /// 刷新用 Token
+        /// </summary>
         public string RefreshToken { get; }
     }
 }

@@ -12,8 +12,8 @@ using e_commerce.Data;
 namespace e_commerce.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240628091647_Add-User-AND-RefreshToken")]
-    partial class AddUserANDRefreshToken
+    [Migration("20240703080425_Add_ValidColumn")]
+    partial class Add_ValidColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace e_commerce.Data.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("e_commerce.data.Models.RefreshToken.RefreshTokenModel", b =>
+            modelBuilder.Entity("e_commerce.Data.Models.RefreshToken.RefreshTokenModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,12 +54,14 @@ namespace e_commerce.Data.Migrations
                     b.HasIndex("RefreshToken")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_RefreshTokens_UserId");
 
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("e_commerce.data.Models.User.UserModel", b =>
+            modelBuilder.Entity("e_commerce.Data.Models.User.UserModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,6 +90,9 @@ namespace e_commerce.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<ulong>("Valid")
+                        .HasColumnType("BIT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -96,20 +101,20 @@ namespace e_commerce.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("e_commerce.data.Models.RefreshToken.RefreshTokenModel", b =>
+            modelBuilder.Entity("e_commerce.Data.Models.RefreshToken.RefreshTokenModel", b =>
                 {
-                    b.HasOne("e_commerce.data.Models.User.UserModel", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
+                    b.HasOne("e_commerce.Data.Models.User.UserModel", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("e_commerce.Data.Models.RefreshToken.RefreshTokenModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("e_commerce.data.Models.User.UserModel", b =>
+            modelBuilder.Entity("e_commerce.Data.Models.User.UserModel", b =>
                 {
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("RefreshToken");
                 });
 #pragma warning restore 612, 618
         }
