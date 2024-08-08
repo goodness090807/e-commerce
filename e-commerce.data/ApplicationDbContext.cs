@@ -1,5 +1,6 @@
 ﻿using e_commerce.Common.Utils;
 using e_commerce.Data.Models;
+using e_commerce.Data.Models.Product;
 using e_commerce.Data.Models.RefreshToken;
 using e_commerce.Data.Models.User;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace e_commerce.Data
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
+        public DbSet<ProductModel> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

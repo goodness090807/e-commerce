@@ -10,6 +10,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce.Controllers.Authorization
 {
+    /// <summary>
+    /// 認證功能
+    /// </summary>
     public class AuthorizationController : BaseController
     {
         private readonly AppSettings _appSettings;
@@ -118,7 +121,7 @@ namespace e_commerce.Controllers.Authorization
         /// <summary>
         /// 撤銷Token
         /// </summary>
-        /// <response code="204">回傳token，並重新設置Refresh Token</response>
+        /// <response code="204"></response>
         [HttpDelete("revoke-token"), Microsoft.AspNetCore.Authorization.Authorize]
         public async Task RevokeTokenAsync()
         {

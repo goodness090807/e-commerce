@@ -71,7 +71,7 @@ namespace e_commerce.Extensions
                 #endregion
 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename), true);
             });
 
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());

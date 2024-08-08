@@ -19,10 +19,10 @@ namespace e_commerce.Data.Models.User
             builder.Property(x => x.Email).HasMaxLength(100);
             builder.Property(x => x.Name).HasMaxLength(50);
 
-            // 將Valid欄位的true/false轉換成1/0
-            builder.Property(x => x.Valid).HasConversion<int>();
             // 設定Valid欄位為BIT
             builder.Property(x => x.Valid).HasColumnType("BIT");
+
+            builder.HasMany(x => x.Products).WithOne(x => x.User).HasForeignKey(x => x.UserId);
         }
     }
 }
