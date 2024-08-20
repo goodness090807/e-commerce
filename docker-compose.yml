@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  e-commerce:
+    image: ${DOCKER_REGISTRY-}ecommerce
+    build:
+      context: .
+      dockerfile: e-commerce/Dockerfile
+  redis:
+    image: redis

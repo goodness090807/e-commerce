@@ -1,0 +1,31 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "e-commerce": "StartDebugging",
+        "redis": "StartWithoutDebugging"
+      }
+    },
+    "Start Redis": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "e-commerce": "DoNotStart",
+        "redis": "StartWithoutDebugging"
+      }
+    },
+    "Start Service": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "e-commerce",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "serviceActions": {
+        "e-commerce": "StartDebugging",
+        "redis": "DoNotStart"
+      }
+    }
+  }
+}
