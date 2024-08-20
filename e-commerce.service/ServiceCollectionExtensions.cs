@@ -6,6 +6,9 @@ namespace e_commerce.Service
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// 註冊自有的服務
+        /// </summary>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddAllCustomService();

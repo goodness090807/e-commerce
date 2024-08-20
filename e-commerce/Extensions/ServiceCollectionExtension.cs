@@ -10,6 +10,9 @@ namespace e_commerce.Extensions
 {
     public static class ServiceCollectionExtension
     {
+        /// <summary>
+        /// Cors 設定
+        /// </summary>
         public static IServiceCollection AddBasicCors(this IServiceCollection services)
         {
             services.AddCors(options =>
