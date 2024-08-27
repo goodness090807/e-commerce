@@ -1,5 +1,7 @@
-﻿using e_commerce.Service.Utils.TokenBlacklist;
+﻿using e_commerce.Service.Utils.EmailService;
+using e_commerce.Service.Utils.TokenBlacklist;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace e_commerce.Service
@@ -9,10 +11,16 @@ namespace e_commerce.Service
         /// <summary>
         /// 註冊自有的服務
         /// </summary>
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(this IServiceCollection services, IHostEnvironment environment)
         {
             services.AddAllCustomService();
             services.AddSingleton<ITokenBlacklistService, TokenBlacklistService>();
+
+            // 測試環境要使用假的Email服務，會顯示在Log
+            if (environment.IsDevelopment())
+            {
+                services.AddSingleton<IEmailService, DevEmailService>();
+            }
 
             return services;
         }

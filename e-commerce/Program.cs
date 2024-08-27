@@ -25,7 +25,7 @@ configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: tr
 builder.Services.Configure<AppSettings>(configuration);
 
 builder.Services.AddMySqlApplicationDbContext(configuration.GetConnectionString("MySql") ?? "")
-    .AddServices()
+    .AddServices(builder.Environment)
     .AddBasicCors()
     .AddJwtAuthentication(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], configuration["Jwt:SecretKey"])
     .AddStackExchangeRedis(configuration["Redis:Host"], configuration["Redis:InstanceName"])

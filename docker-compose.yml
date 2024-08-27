@@ -1,10 +1,24 @@
 version: '3.4'
 
+networks:
+  app-tier:
+    driver: bridge
+
 services:
+  redis:
+    image: redis
+    ports:
+        - "6379:6379"
+    networks:
+      - app-tier
+  
   e-commerce:
     image: ${DOCKER_REGISTRY-}ecommerce
+    ports:
+        - "5000:5000"
+        - "5001:5001"
     build:
       context: .
       dockerfile: e-commerce/Dockerfile
-  redis:
-    image: redis
+    networks:
+      - app-tier
