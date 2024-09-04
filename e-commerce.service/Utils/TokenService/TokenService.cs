@@ -109,12 +109,12 @@ namespace e_commerce.Service.Utils.TokenService
             }
             catch (SecurityTokenExpiredException)
             {
-                throw new UnauthorizedException("Token expired", code: ErrorCodes.TokenExpired);
+                throw new UnauthorizedException("Token已經過期", code: ErrorCodes.TokenExpired);
             }
             catch(Exception ex)
             {
                 _logger.LogWarning(ex, "奇怪的Token進入");
-                throw new UnauthorizedException("Invalid token");
+                throw new UnauthorizedException("這不是正確的Token");
             }
         }
     }

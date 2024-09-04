@@ -7,7 +7,7 @@ namespace e_commerce.Data.Models.Product
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ProductModel> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.SKU).IsRequired().HasMaxLength(30);
+            builder.Property(x => x.SKU).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Description).IsRequired().HasMaxLength(10000);
             builder.Property(x => x.Price).IsRequired();
@@ -17,8 +17,8 @@ namespace e_commerce.Data.Models.Product
             // Price欄位小數點後兩位
             builder.Property(x => x.Price).HasPrecision(18, 2);
 
-            // 將UserId 和 SKU 設定為唯一索引
-            builder.HasIndex(x => new { x.UserId, x.SKU }).IsUnique();
+            // SKU 設定為唯一索引
+            builder.HasIndex(x => x.SKU).IsUnique();
         }
     }
 }

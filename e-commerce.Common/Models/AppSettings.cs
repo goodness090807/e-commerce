@@ -5,6 +5,7 @@
         public JwtSettings Jwt { get; set; } = new JwtSettings();
         public VerificationSettings Verification { get; set; } = new VerificationSettings();
         public EmailSettings Email { get; set; } = new EmailSettings();
+        public GoogleStorageSettings GoogleStorage { get; set; } = new GoogleStorageSettings();
 
         public class JwtSettings
         {
@@ -28,6 +29,12 @@
             public string Name { get; set; } = string.Empty;
             public string UserName { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
+        }
+
+        public class GoogleStorageSettings
+        {
+            public string BucketName { get; set; } = string.Empty;
+            public string BaseUrl { get; set; } = string.Empty;
         }
     }
 }

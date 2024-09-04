@@ -19,19 +19,28 @@ namespace e_commerce.Controllers.Product
         }
 
         /// <summary>
-        /// 新增產品基本資訊
+        /// 新增產品基本資訊 (Step 1)
         /// </summary>
         /// <response code="200">新增成功</response>
         [HttpPost, Authorize]
-        public async Task AddProductBasicAsync([FromBody] AddProductBasicRequest request)
+        public async Task<int> AddProductBasicAsync([FromBody] AddProductBasicRequest request)
         {
-            await _productService.AddProductBasicAsync(User.GetUserId(), request.Name, request.Description, request.Price);
+            return await _productService.AddProductBasicAsync(User.GetUserId(), request.Name, request.Description, request.Price);
         }
 
-        [HttpPost("SEO"), Authorize]
-        public async Task AddProductSEOAsync()
+        /// <summary>
+        /// 新增產品SEO資訊 (Step 2)
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [HttpPost("{productId}/SEO"), Authorize]
+        public async Task AddProductSEOAsync([FromRoute] int productId, [FromForm] AddProductSEORequest request)
         {
-            throw new NotImplementedException();
+            await _productService.AddProductSEOAsync(User.GetUserId(),
+                productId,
+                request.MetaTitle,
+                request.MetaDescription,
+                request.MetaPicture);
         }
     }
 }

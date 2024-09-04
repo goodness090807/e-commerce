@@ -4,6 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace e_commerce.Filters
 {
+    /// <summary>
+    /// 判斷是否有[Authorize]屬性，有的話加入Swagger的Security]
+    /// </summary>
     public class SwaggerFilters : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)

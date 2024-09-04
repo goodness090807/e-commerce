@@ -8,7 +8,6 @@ namespace e_commerce.Data.Models.Inventory
         public int Id { get; set; }
         public int ProductId { get; set; }        
         public int Quantity { get; set; }
-        [Timestamp]
         public byte[] RowVersion { get; set; } = null!;
 
 

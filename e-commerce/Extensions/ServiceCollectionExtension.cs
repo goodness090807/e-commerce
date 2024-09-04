@@ -1,5 +1,7 @@
-﻿using e_commerce.Filters;
+﻿using e_commerce.Authorization;
+using e_commerce.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -20,7 +22,7 @@ namespace e_commerce.Extensions
                 options.AddDefaultPolicy(builder =>
                 {
                     // TODO： 需要把正式機和測試機拆開
-                    builder.WithOrigins("https://localhost:8081", "https://localhost:7204")
+                    builder.WithOrigins("https://localhost:5000", "https://localhost:5001")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();
@@ -53,6 +55,16 @@ namespace e_commerce.Extensions
             return services;
         }
 
+        /// <summary>
+        /// 新增自訂義授權驗證機制
+        /// </summary>
+        public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthorizationHandler, ValidUserHandler>();
+
+            return services;
+        }
+
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
@@ -63,12 +75,12 @@ namespace e_commerce.Extensions
                 #region 加鎖
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Bearer {token}",
+                    Description = "輸入格式：Bearer {token}",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
+                    Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
-                    Scheme = "Bearer",
+                    Scheme = "Bearer"
                 });
                 options.OperationFilter<SwaggerFilters>();
                 #endregion

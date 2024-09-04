@@ -12,8 +12,8 @@ using e_commerce.Data;
 namespace e_commerce.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240705083146_Add_ProductModelAnd_Relation_To_User")]
-    partial class Add_ProductModelAnd_Relation_To_User
+    [Migration("20240829163946_Add_Prodcut_AND_SEO_AND_SNO")]
+    partial class Add_Prodcut_AND_SEO_AND_SNO
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,8 +58,8 @@ namespace e_commerce.Data.Migrations
 
                     b.Property<string>("SKU")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -69,10 +69,52 @@ namespace e_commerce.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "SKU")
+                    b.HasIndex("SKU")
                         .IsUnique();
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("e_commerce.Data.Models.ProductSEO.ProductSEOModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("MetaDescription")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("varchar(10000)");
+
+                    b.Property<string>("MetaPictureUrl")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("MetaTitle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductSEOs");
                 });
 
             modelBuilder.Entity("e_commerce.Data.Models.RefreshToken.RefreshTokenModel", b =>
@@ -109,6 +151,56 @@ namespace e_commerce.Data.Migrations
                         .HasDatabaseName("IX_RefreshTokens_UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("e_commerce.Data.Models.SerialNumber.SerialNumberModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CurrentNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastGeneratedDate")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<Guid>("RowVersion")
+                        .IsConcurrencyToken()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type")
+                        .IsUnique();
+
+                    b.ToTable("SerialNumbers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CurrentNumber = 1,
+                            LastGeneratedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Length = 10,
+                            Prefix = "PD",
+                            RowVersion = new Guid("cf1f568f-1a6b-44da-97d5-54ca3261eb30"),
+                            Type = "SKU"
+                        });
                 });
 
             modelBuilder.Entity("e_commerce.Data.Models.User.UserModel", b =>
@@ -162,6 +254,17 @@ namespace e_commerce.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("e_commerce.Data.Models.ProductSEO.ProductSEOModel", b =>
+                {
+                    b.HasOne("e_commerce.Data.Models.Product.ProductModel", "Product")
+                        .WithOne("ProductSEO")
+                        .HasForeignKey("e_commerce.Data.Models.ProductSEO.ProductSEOModel", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("e_commerce.Data.Models.RefreshToken.RefreshTokenModel", b =>
                 {
                     b.HasOne("e_commerce.Data.Models.User.UserModel", "User")
@@ -171,6 +274,11 @@ namespace e_commerce.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("e_commerce.Data.Models.Product.ProductModel", b =>
+                {
+                    b.Navigation("ProductSEO");
                 });
 
             modelBuilder.Entity("e_commerce.Data.Models.User.UserModel", b =>

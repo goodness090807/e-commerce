@@ -20,5 +20,9 @@ services:
     build:
       context: .
       dockerfile: e-commerce/Dockerfile
+    volumes:
+      - ${GOOGLE_CREDENTIALS_FILE_PATH}:/app/application_default_credentials.json
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: application_default_credentials.json
     networks:
       - app-tier

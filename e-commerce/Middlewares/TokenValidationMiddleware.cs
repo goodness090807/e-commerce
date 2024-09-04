@@ -25,31 +25,41 @@ namespace e_commerce.Middlewares
                 return;
             }
 
+            try
+            {
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token))
+                {
+                    await SetUnauthorizedResponse(context, "Token不存在");
+                    return;
+                }
+                
+                if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                {
+                    await SetUnauthorizedResponse(context, "Token已被移除");
+                    return;
+                }
+            }
+            catch(Exception ex)
+            {
+                await SetUnauthorizedResponse(context, ex.Message);
+                return;
+            }
+
+            await _next(context);
+        }
+
+        private async Task SetUnauthorizedResponse(HttpContext context, string errorMessage)
+        {
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
             var response = new ErrorApiResponse()
             {
                 StatusCode = 401,
                 Code = 401001,
-                Detail = new object(),
+                Message = errorMessage,
             };
-
-
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            if (string.IsNullOrEmpty(token))
-            {
-                response.Message = "Token is missing";
-            }
-            else if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
-            {
-                response.Message = "Token has been revoked";
-            }
-            else
-            {
-                await _next(context);
-                return;
-            }
-
-            context.Response.StatusCode = response.StatusCode;
-            context.Response.ContentType = "application/json";
 
             await JsonSerializer.SerializeAsync(context.Response.Body, response);
         }

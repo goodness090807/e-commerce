@@ -28,6 +28,7 @@ builder.Services.AddMySqlApplicationDbContext(configuration.GetConnectionString(
     .AddServices(builder.Environment)
     .AddBasicCors()
     .AddJwtAuthentication(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], configuration["Jwt:SecretKey"])
+    .AddAuthorizationPolicies()
     .AddStackExchangeRedis(configuration["Redis:Host"], configuration["Redis:InstanceName"])
     .AddControllers();
 

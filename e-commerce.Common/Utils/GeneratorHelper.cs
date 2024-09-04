@@ -2,7 +2,7 @@
 
 namespace e_commerce.Common.Utils
 {
-    public class KeyGenerator
+    public class GeneratorHelper
     {
         public static string GenerateRandomKey(int keySize = 32)
         {
@@ -13,6 +13,11 @@ namespace e_commerce.Common.Utils
                 // Convert to Base64 for easier storage and readability
                 return Convert.ToBase64String(randomBytes);
             }
+        }
+
+        public static string GetRandomStringByTime(int randomValue)
+        {
+            return DateTime.UtcNow.AddHours(8).ToString("yyyyMMddHHmmssfff") + new Random().Next(randomValue);
         }
     }
 }

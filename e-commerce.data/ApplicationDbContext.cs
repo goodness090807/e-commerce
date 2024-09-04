@@ -1,7 +1,9 @@
 ﻿using e_commerce.Common.Utils;
 using e_commerce.Data.Models;
 using e_commerce.Data.Models.Product;
+using e_commerce.Data.Models.ProductSEO;
 using e_commerce.Data.Models.RefreshToken;
+using e_commerce.Data.Models.SerialNumber;
 using e_commerce.Data.Models.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +18,8 @@ namespace e_commerce.Data
         public DbSet<UserModel> Users { get; set; }
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
         public DbSet<ProductModel> Products { get; set; }
+        public DbSet<ProductSEOModel> ProductSEOs { get; set; }
+        public DbSet<SerialNumberModel> SerialNumbers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

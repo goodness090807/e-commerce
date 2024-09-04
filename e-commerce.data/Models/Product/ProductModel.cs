@@ -1,4 +1,5 @@
-﻿using e_commerce.Data.Models.User;
+﻿using e_commerce.Data.Models.ProductSEO;
+using e_commerce.Data.Models.User;
 
 namespace e_commerce.Data.Models.Product
 {
@@ -35,5 +36,7 @@ namespace e_commerce.Data.Models.Product
         public bool Launched { get; set; }
 
         public UserModel User { get; set; } = null!;
+
+        public ProductSEOModel? ProductSEO { get; set; }
     }
 }
