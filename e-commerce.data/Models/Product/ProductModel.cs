@@ -1,4 +1,5 @@
-﻿using e_commerce.Data.Models.ProductSEO;
+﻿using e_commerce.Data.Models.ProductImage;
+using e_commerce.Data.Models.ProductSEO;
 using e_commerce.Data.Models.User;
 
 namespace e_commerce.Data.Models.Product
@@ -38,5 +39,7 @@ namespace e_commerce.Data.Models.Product
         public UserModel User { get; set; } = null!;
 
         public ProductSEOModel? ProductSEO { get; set; }
+
+        public ICollection<ProductImageModel> ProductImages = new List<ProductImageModel>();
     }
 }

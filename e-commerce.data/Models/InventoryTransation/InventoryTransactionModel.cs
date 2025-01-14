@@ -1,5 +1,5 @@
 ﻿using e_commerce.Data.Enums;
-using e_commerce.Data.Models.Inventory;
+using e_commerce.Data.Models.ProductInventory;
 
 namespace e_commerce.Data.Models.InventoryTransation
 {
@@ -22,6 +22,6 @@ namespace e_commerce.Data.Models.InventoryTransation
         /// </summary>
         public string Notes { get; set; } = string.Empty;
 
-        public InventoryModel Inventory { get; set; } = new();
+        public ProductInventoryModel Inventory { get; set; } = new();
     }
 }

@@ -69,7 +69,6 @@ namespace e_commerce.Controllers.Authorization
         /// <response code="200">註冊成功，且發出驗證信</response>
         /// <response code="409">信箱已存在</response>
         [SwaggerRequestExample(typeof(RegisterRequest), typeof(RegisterRequest.RegisterRequestExample))]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(RegisterRequest.RegisterRequestExample))]
         [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(RegisterRequest.ConflictResponseExample))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ErrorApiResponse))]

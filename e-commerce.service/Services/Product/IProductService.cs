@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using e_commerce.Service.Services.Product.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace e_commerce.Service.Services.Product
 {
@@ -21,8 +22,17 @@ namespace e_commerce.Service.Services.Product
         /// <param name="productId">商品ID</param>
         /// <param name="metaTitle">SEO網頁名稱</param>
         /// <param name="metaDescription">SEO網頁描述用</param>
-        /// <param name="metaPicture">SEO照片</param>
         /// <returns></returns>
-        Task AddProductSEOAsync(int userId, int productId, string metaTitle, string metaDescription, IFormFile? metaPicture);
+        Task AddProductSEOAsync(int userId, int productId, string metaTitle, string metaDescription);
+
+        /// <summary>
+        /// 新增商品圖片
+        /// </summary>
+        /// <param name="productId">商品ID</param>
+        /// <param name="files">檔案</param>
+        /// <returns></returns>
+        Task<AddProductImagesViewModel> AddProductImagesAsync(int userId, int productId, IFormFile[] files);
+
+        Task AddProductInventoryAsync(int userId, int productId, int stock, int safetyStock);
     }
 }

@@ -4,6 +4,7 @@ using e_commerce.Service.Services.Product;
 using e_commerce.Service.Services.SerialNumber;
 using e_commerce.Service.Utils.StorageService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace e_commerce.Test.Service.Services
@@ -15,7 +16,8 @@ namespace e_commerce.Test.Service.Services
             var serialNumberServiceMock = new Mock<ISerialNumberService>();
             serialNumberServiceMock.Setup(x => x.GenerateSerialNumberAsync(It.IsAny<SerialNumberType>())).ReturnsAsync("SKU12345678");
             var storageService = new Mock<IStorageService>().Object;
-            return new ProductService(context, serialNumberServiceMock.Object, storageService); // Use the Mock object
+            var loggerMock = new Mock<ILogger<ProductService>>().Object; // Add a mock logger
+            return new ProductService(context, loggerMock, serialNumberServiceMock.Object, storageService); // Use the Mock object
         }
 
         [Fact(DisplayName = "成功新增商品，回傳商品Id")]

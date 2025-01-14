@@ -19,6 +19,12 @@ namespace e_commerce.Data.Models.Product
 
             // SKU 設定為唯一索引
             builder.HasIndex(x => x.SKU).IsUnique();
+
+            builder.HasMany(x => x.ProductImages)
+                .WithOne(x => x.Product)
+                .HasForeignKey(x => x.ProductId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

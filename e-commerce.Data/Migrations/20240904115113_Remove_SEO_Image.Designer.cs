@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce.Data;
 
@@ -11,9 +12,11 @@ using e_commerce.Data;
 namespace e_commerce.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904115113_Remove_SEO_Image")]
+    partial class Remove_SEO_Image
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,49 +75,6 @@ namespace e_commerce.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("e_commerce.Data.Models.ProductImage.ProductImageModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ImageTitle")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<ulong>("IsMain")
-                        .HasColumnType("BIT");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sort")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImageUrl")
-                        .IsUnique();
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("e_commerce.Data.Models.ProductSEO.ProductSEOModel", b =>
@@ -289,17 +249,6 @@ namespace e_commerce.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("e_commerce.Data.Models.ProductImage.ProductImageModel", b =>
-                {
-                    b.HasOne("e_commerce.Data.Models.Product.ProductModel", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("e_commerce.Data.Models.ProductSEO.ProductSEOModel", b =>
                 {
                     b.HasOne("e_commerce.Data.Models.Product.ProductModel", "Product")
@@ -324,8 +273,6 @@ namespace e_commerce.Data.Migrations
 
             modelBuilder.Entity("e_commerce.Data.Models.Product.ProductModel", b =>
                 {
-                    b.Navigation("ProductImages");
-
                     b.Navigation("ProductSEO");
                 });
 

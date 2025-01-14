@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Swashbuckle.AspNetCore.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce.Controllers.Product.Requests
 {
@@ -12,5 +13,26 @@ namespace e_commerce.Controllers.Product.Requests
 
         [Required]
         public decimal Price { get; set; }
+
+        public class Example : IExamplesProvider<AddProductBasicRequest>
+        {
+            public AddProductBasicRequest GetExamples()
+            {
+                return new AddProductBasicRequest
+                {
+                    Name = "商品名稱",
+                    Description = "商品描述",
+                    Price = 100
+                };
+            }
+        }
+
+        public class AddProductSuccessResponseExample : IExamplesProvider<int>
+        {
+            public int GetExamples()
+            {
+                return 1;
+            }
+        }
     }
 }

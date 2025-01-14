@@ -1,9 +1,11 @@
 ﻿using e_commerce.Data.Models.Product;
-using System.ComponentModel.DataAnnotations;
 
-namespace e_commerce.Data.Models.Inventory
+namespace e_commerce.Data.Models.ProductInventory
 {
-    public class InventoryModel : Auditable
+    /// <summary>
+    /// 商品庫存
+    /// </summary>
+    public class ProductInventoryModel : Auditable
     {
         public int Id { get; set; }
         public int ProductId { get; set; }        
